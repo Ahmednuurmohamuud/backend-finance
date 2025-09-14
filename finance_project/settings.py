@@ -19,31 +19,28 @@ env = environ.Env()
 environ.Env.read_env()
 import os
 
-# BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8000')
-# Environment setup
-env = environ.Env()
-environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-STATIC_URL = "/static/"
-# Meesha static files la ururin doono markii collectstatic la waco
+# Initialize environment variables
+env = environ.Env(
+    DEBUG=(bool, False)  # default value if not set
+)
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
+# Load .env file **only in local development**
+env_file = os.path.join(BASE_DIR, ".env")
+if os.path.exists(env_file):
+    environ.Env.read_env(env_file)
 
-# Security
+# Security settings
 SECRET_KEY = env("SECRET_KEY")
-DEBUG = env.bool("DEBUG", default=False)
-
-# ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[".onrender.com"])
-
-
+DEBUG = env.bool("DEBUG")
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'finance-backend.up.railway.app']
 
-DEBUG = False
+# Static files
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 
 # Application definition

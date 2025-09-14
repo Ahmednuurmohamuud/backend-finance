@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="so">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lacagaha Socda</title>
+    <style>
+            /* Aasaaska */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            margin: 0;
+            padding: 0;
+            background-color: #f7fafc;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Madaxa */
+        .header {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 4px solid #3730a3;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .logo {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        
+        /* Nuxurka */
+        .content {
+            padding: 30px;
+            background-color: #ffffff;
+        }
+        
+        .notification-card {
+            background-color: #f8fafc;
+            border-left: 4px solid #4f46e5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .subject {
+            color: #1e293b;
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        
+        .message {
+            color: #475569;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .budget-stats {
+            background-color: #f1f5f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .stat-item:last-child {
+            border-bottom: none;
+        }
+        
+        .button {
+            display: inline-block;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 14px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .button:hover {
+            background: linear-gradient(135deg, #3730a3 0%, #6d28d9 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.3);
+        }
+        
+        /* Cagta */
+        .footer {
+            background-color: #f1f5f9;
+            padding: 25px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            margin: 15px 0;
+        }
+        
+        .footer-link {
+            color: #4f46e5;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-icon {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background-color: #cbd5e1;
+            border-radius: 50%;
+            line-height: 40px;
+            text-align: center;
+            margin: 0 8px;
+            color: #475569;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 600px) {
+            .content {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .button {
+                display: block;
+                margin: 20px auto;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header" style="background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);">
+            <div class="logo">🔄</div>
+            <h1>Recurring Payments</h1>
+        </div>
+        
+        <div class="content">
+            <div class="notification-card">
+                <h2 class="subject">{{ subject }}</h2>
+                <p class="message">{{ message }}</p>
+                
+                <!-- Recurring Transaction Data -->
+                <div class="transaction-details">
+                    <div class="detail-item">
+                        <span>Recurring Payment Name:</span>
+                        <span><strong>{{ transaction_name }}</strong></span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span>Amount:</span>
+                        <span><strong>{{ transaction_amount }} {{ transaction_currency }}</strong></span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span>Type:</span>
+                        <span><strong>{{ transaction_type }}</strong></span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span>Transaction Date:</span>
+                        <span><strong>{{ transaction_date }}</strong></span>
+                    </div>
+                    
+                    {% if account_name %}
+                    <div class="detail-item">
+                        <span>Account:</span>
+                        <span><strong>{{ account_name }}</strong></span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if frequency %}
+                    <div class="detail-item">
+                        <span>Frequency:</span>
+                        <span><strong>{{ frequency }}</strong></span>
+                    </div>
+                    {% endif %}
+                    
+                    {% if next_due_date %}
+                    <div class="detail-item">
+                        <span>Next Due Date:</span>
+                        <span><strong>{{ next_due_date }}</strong></span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="{{ action_url }}" class="button">Manage Recurring Payments</a>
+            </div>
+            
+            <p style="text-align: center; color: #64748b; font-size: 14px;">
+                This recurring payment will be automatically created on the appropriate date.
+            </p>
+        </div>
+        
+        <div class="footer">
+            <p>You received this notification because you have recurring payments set up.</p>
+            
+            <div class="footer-links">
+                <a href="{{ settings_url }}" class="footer-link">Modify Recurring Payments</a>
+                <a href="{{ unsubscribe_url }}" class="footer-link">Unsubscribe from Notifications</a>
+                <a href="{{ support_url }}" class="footer-link">Support</a>
+            </div>
+            
+            <p>© 2025 Finance App. All Rights Reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

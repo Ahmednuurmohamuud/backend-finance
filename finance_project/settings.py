@@ -74,12 +74,12 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://finance-backend.up.railway.app",
-    "https://personalfinance-ecru.vercel.app",
+    "https://finance-frontend-neon.vercel.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://finance-backend.up.railway.app",
-    "https://personalfinance-ecru.vercel.app",
+    "https://finance-frontend-neon.vercel.app",
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True

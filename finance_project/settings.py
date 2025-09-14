@@ -26,9 +26,10 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+STATIC_URL = "/static/"
 # Meesha static files la ururin doono markii collectstatic la waco
-# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -39,7 +40,9 @@ DEBUG = env.bool("DEBUG", default=False)
 # ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[".onrender.com"])
 
 
-ALLOWED_HOSTS = ['localhost' '127.0.0.1' ,'finance-backend.up.railway.app']
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'finance-backend.up.railway.app']
+
 DEBUG = False
 
 

@@ -241,11 +241,11 @@ CELERY_BEAT_SCHEDULE = {
     # ... keep the rest the same
      "check-daily-notifications": {
         "task": "core.utils.notifications.check_budget_notifications",
-        "schedule": crontab(hour=16, minute=49),  # Once daily at 
+        "schedule": crontab(hour=14, minute=15),  # Once daily at 
     },
     "generate-recurring-transactions": {
         "task": "core.tasks.generate_due_recurring_transactions_task",
-        "schedule": crontab(hour=16, minute=49),
+        "schedule": crontab(hour=14, minute=15),
     },
     "fetch-usd-sos-exchange-rate": {
         "task": "core.tasks.fetch_exchange_rates",

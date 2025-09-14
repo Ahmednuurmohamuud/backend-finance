@@ -43,7 +43,7 @@ from django.urls import reverse
 signer = TimestampSigner()  # token generator for email verification
 EMAIL_TOKEN_MAX_AGE = 60 * 60 * 24  # 24h validity
 
-FRONTEND_URL = "https://personalfinance-ecru.vercel.app"
+FRONTEND_URL = "https://finance-frontend-neon.vercel.app"
 
 
 

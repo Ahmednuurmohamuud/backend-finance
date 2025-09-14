@@ -4,7 +4,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils import timezone
-FRONTEND_URL = "https://personalfinance-ecru.vercel.app"
+FRONTEND_URL = "https://finance-frontend-neon.vercel.app"
 
 
 def send_notification_email(user, subject, message, notification_id=None, email_type="general", extra_data=None):

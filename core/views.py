@@ -43,7 +43,7 @@ from django.urls import reverse
 signer = TimestampSigner()  # token generator for email verification
 EMAIL_TOKEN_MAX_AGE = 60 * 60 * 24  # 24h validity
 
-
+FRONTEND_URL = "https://personalfinance-ecru.vercel.app"
 
 
 
@@ -214,7 +214,7 @@ def resend_otp(request):
 # -------- Send verification email --------
 def send_verification_email(user):
     token = signer.sign(user.id)  # create signed token
-    verification_link = f"http://localhost:5173/verify-email?token={token}"
+    verification_link = f"{FRONTEND_URL}/verify-email?token={token}"
     send_mail(
         subject="Verify your email",
         message=f"Click this link to verify your email: {verification_link}",
@@ -396,7 +396,7 @@ def reset_password(request):
 
     # Generate token
     token = token_generator.make_token(user)
-    reset_link = f"http://localhost:5173/reset-password-confirm?uid={user.id}&token={token}"
+    reset_link = f"{FRONTEND_URL}/reset-password-confirm?uid={user.id}&token={token}"
 
     # Console email (tijaabo free)
     send_mail(

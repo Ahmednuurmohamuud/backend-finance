@@ -82,7 +82,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://finance-frontend-production-a0b9.up.railway.app",
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True
+
 CORS_ALLOW_CREDENTIALS = True
 
 

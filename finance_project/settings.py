@@ -74,7 +74,7 @@ MIDDLEWARE = [
 
 
 CORS_ALLOWED_ORIGINS = [
-    "https://finance-backend.up.railway.app",
+    
     "https://finance-frontend-production-a0b9.up.railway.app",
 ]
 

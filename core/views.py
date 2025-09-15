@@ -39,6 +39,10 @@ import random
 from django.core.signing import TimestampSigner, BadSignature, SignatureExpired
 from django.core.mail import send_mail
 from django.urls import reverse
+import resend
+
+# Ku dar key-gaaga .env ama settings.py
+resend.api_key = "re_f7ustUyN_JWnyN6VN3DuwKWkTcdtmL2F8"
 
 signer = TimestampSigner()  # token generator for email verification
 EMAIL_TOKEN_MAX_AGE = 60 * 60 * 24  # 24h validity
@@ -212,21 +216,25 @@ def resend_otp(request):
 # -------- Auth endpoints --------
 
 
-# -------- Send verification email --------
+
+
+# -------- Send verification email using Resend --------
 def send_verification_email(user):
-    token = signer.sign(user.id)  # create signed token
+    token = signer.sign(user.id)
     verification_link = f"{FRONTEND_URL}/verify-email?token={token}"
-    send_mail(
-        subject="Verify your email",
-        message=f"Click this link to verify your email: {verification_link}",
-        from_email=None,  # uses DEFAULT_FROM_EMAIL
-        recipient_list=[user.email],
-        fail_silently=False,
-    )
+    try:
+        r = resend.Emails.send({
+            "from": "Finance App <no-reply@yourdomain.com>",
+            "to": user.email,
+            "subject": "Verify your email",
+            "html": f"<p>Click this link to verify your email: <a href='{verification_link}'>{verification_link}</a></p>"
+        })
+        print("Email sent:", r)
+    except Exception as e:
+        print("Failed to send verification email:", e)
+        raise
 
-# ----- Resend Verification -----
-
-
+# ----- Resend Verification using Resend API -----
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def resend_verification(request):
@@ -256,6 +264,7 @@ def resend_verification(request):
 
     except User.DoesNotExist:
         return Response({"detail": "User not found"}, status=404)
+
 
 
 # -------- Register endpoint --------

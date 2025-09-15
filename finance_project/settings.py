@@ -263,8 +263,8 @@ CELERY_BEAT_SCHEDULE = {
 # Email tijaabo (bilaash)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_PORT = 465 # Beddelkan
+EMAIL_USE_SSL = True # Isticmaal SSL halkii aad ka isticmaali lahayd TLS
 EMAIL_HOST_USER = "xararavic1547@gmail.com"
 EMAIL_HOST_PASSWORD = "oaounkaztlepdmnj"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

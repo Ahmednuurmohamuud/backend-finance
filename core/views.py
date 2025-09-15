@@ -224,7 +224,7 @@ def send_verification_email(user):
     verification_link = f"{FRONTEND_URL}/verify-email?token={token}"
     try:
         r = resend.Emails.send({
-            "from": "Finance App <no-reply@yourdomain.com>",
+            "from": "Finance App <axmednuur2701@gmail.com>",
             "to": user.email,
             "subject": "Verify your email",
             "html": f"<p>Click this link to verify your email: <a href='{verification_link}'>{verification_link}</a></p>"

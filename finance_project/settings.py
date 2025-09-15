@@ -42,7 +42,7 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'finance-backend.up.railway.app']
 # Static files
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
+BASE_API_URL = os.environ.get('BASE_API_URL')
 
 # Application definition
 

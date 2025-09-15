@@ -43,7 +43,7 @@ from django.urls import reverse
 signer = TimestampSigner()  # token generator for email verification
 EMAIL_TOKEN_MAX_AGE = 60 * 60 * 24  # 24h validity
 
-FRONTEND_URL = "https://finance-frontend-production-a0b9.up.railway.app"
+NEXT_PUBLIC_API_URL="https://finance-frontend-production-a0b9.up.railway.app/api"
 
 
 
@@ -213,8 +213,10 @@ def resend_otp(request):
 
 # -------- Send verification email --------
 def send_verification_email(user):
-    token = signer.sign(user.id)  # create signed token
-    verification_link = f"https://finance-frontend-production-a0b9.up.railway.app/verify-email?token={token}"
+    token = signer.sign(user.id)
+    # Use the Django setting, not a Next.js variable
+    verification_link = f"{settings.BASE_API_URL}/verify-email?token={token}"
+    
     send_mail(
         subject="Verify your email",
         message=f"Click this link to verify your email: {verification_link}",
@@ -396,7 +398,7 @@ def reset_password(request):
 
     # Generate token
     token = token_generator.make_token(user)
-    reset_link = f"{FRONTEND_URL}/reset-password-confirm?uid={user.id}&token={token}"
+    reset_link = f"{settings.BASE_API_URL}/reset-password-confirm?uid={user.id}&token={token}"
 
     # Console email (tijaabo free)
     send_mail(

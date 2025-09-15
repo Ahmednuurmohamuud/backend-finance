@@ -14,7 +14,7 @@ def send_notification_email(user, subject, message, notification_id=None, email_
         context = {
             'subject': subject,
             'message': message,
-            'action_url': f"{FRONTEND_URL}/notifications/{notification_id}" if notification_id else f"{settings.FRONTEND_URL}/notifications",
+            'action_url': f"https://finance-frontend-production-a0b9.up.railway.app/notifications/{notification_id}" if notification_id else f"{settings.FRONTEND_URL}/notifications",
             'unsubscribe_url': f"{FRONTEND_URL}/settings/notifications",
             'settings_url': f"{FRONTEND_URL}/settings",
             'support_url': f"{FRONTEND_URL}/support",

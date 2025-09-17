@@ -82,11 +82,11 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    # "https://finance-frontend-production-a0b9.up.railway.app",
+    "https://finance-frontend-production-a0b9.up.railway.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    # "https://finance-frontend-production-a0b9.up.railway.app",
+    "https://finance-frontend-production-a0b9.up.railway.app",
 ]
 
 

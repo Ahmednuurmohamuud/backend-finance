@@ -91,6 +91,9 @@ class User(AbstractUser):
     two_factor_enabled = models.BooleanField(default=False)
     # models.py
     last_verification_sent = models.DateTimeField(null=True, blank=True)
+    verification_count = models.IntegerField(default=0)
+    verification_window_start = models.DateTimeField(null=True, blank=True)
+   
 
     REQUIRED_FIELDS = ["email", "preferred_currency"]
 

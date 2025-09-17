@@ -49,8 +49,8 @@ from django.core.mail import EmailMultiAlternatives
 signer = TimestampSigner()  # token generator for email verification
 EMAIL_TOKEN_MAX_AGE = 60 * 60 * 24  # 24h validity
 
-FRONTEND_URL = "http://localhost:5173"
-# FRONTEND_URL = "https://finance-frontend-production-a0b9.up.railway.app"
+# FRONTEND_URL = "http://localhost:5173"
+FRONTEND_URL = "https://finance-frontend-production-a0b9.up.railway.app"
 
 
 
@@ -252,6 +252,8 @@ def send_verification_email(user):
         raise
 
 
+from django.utils import timezone
+from datetime import timedelta
 
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
@@ -266,22 +268,41 @@ def resend_verification(request):
         if user.is_verified:
             return Response({"detail": "User is already verified"}, status=400)
 
-        # Rate limiting: 2 minutes
-        if user.last_verification_sent:
-            diff = timezone.now() - user.last_verification_sent
-            if diff.total_seconds() < 120:
-                return Response(
-                    {"detail": "OTP hore ayaa laguu diray. Fadlan sug 2 daqiiqo ka hor intaadan mar kale codsan."},
-                    status=429
-                )
+        now = timezone.now()
 
+        # Haddii user uusan horey u bilaabin 24h window, deji
+        if not user.verification_window_start or now - user.verification_window_start > timedelta(hours=24):
+            user.verification_window_start = now
+            user.verification_count = 0
+
+        # Check 3 jeer maalintii
+        if user.verification_count >= 3:
+            return Response(
+                {"detail": "Waxaad horey u codsatay OTP 3 jeer 24 saac gudaheed. Fadlan sug ilaa 24 saac ka dib."},
+                status=429
+            )
+
+        # Check 30 daqiiqo min ka hor codsiga xiga
+        if user.last_verification_sent and (now - user.last_verification_sent) < timedelta(minutes=30):
+            remaining = 30 - int((now - user.last_verification_sent).total_seconds() / 60)
+            return Response(
+                {"detail": f"Fadlan sug {remaining} daqiiqo ka hor intaadan mar kale codsan."},
+                status=429
+            )
+
+        # Haddii limit aan la gaarin, dir OTP
         send_verification_email(user)
-        user.last_verification_sent = timezone.now()
-        user.save(update_fields=["last_verification_sent"])
+        user.last_verification_sent = now
+        user.verification_count += 1
+        user.save(update_fields=["last_verification_sent", "verification_count", "verification_window_start"])
+
         return Response({"detail": "OTP verification email sent"})
 
     except User.DoesNotExist:
         return Response({"detail": "User not found"}, status=404)
+
+
+
 
 # -------- Send verification email using Resend --------
 # def send_verification_email(user):
@@ -367,7 +388,7 @@ def google_oauth(request):
     token = request.data.get("id_token")
     client_id = request.data.get("client_id")
     if not token or not client_id:
-        return Response({"detail":"id_token and client_id required"}, status=400)
+        return Response({"detail": "id_token and client_id required"}, status=400)
 
     try:
         info = google_id_token.verify_oauth2_token(
@@ -378,7 +399,6 @@ def google_oauth(request):
         first_name = info.get("given_name", "")
         last_name = info.get("family_name", "")
         profile_photo = info.get("picture", "")
-    
 
         user, created = User.objects.get_or_create(
             email=email,
@@ -389,24 +409,18 @@ def google_oauth(request):
                 "last_name": last_name,
                 "photo": profile_photo,
                 "preferred_currency": Currency.objects.get(code="USD"),
-                "is_verified": False,  # always start as unverified
+                "is_verified": True,   # ✅ si toos ah u dhigo True
             }
         )
 
+        # Haddii uu horey u jiray laakiin google_id ma qorna
         if not user.google_id:
             user.google_id = gid
             user.save(update_fields=["google_id"])
 
-        # Haddii cusub yahay ama aan la xaqiijin, u dir fariin xaqiijin ah
-        if created or not user.is_verified:
-            send_verification_email(user)
-            # Ku celi jawaab haddii isticmaalaha aan la xaqiijin
-            return Response({
-                "detail": "Please verify your email before using the account.",
-                "email_verified": False,
-            }, status=status.HTTP_403_FORBIDDEN)
+        # ✅ Hadda OTP email ma diraysid mar dambe
 
-        # Haddi isticmaalaha la xaqiijiyay, u soo dir tokens-ka
+        # Dir tokens-ka
         refresh = RefreshToken.for_user(user)
         return Response({
             "access": str(refresh.access_token),
@@ -417,6 +431,7 @@ def google_oauth(request):
 
     except Exception as e:
         return Response({"detail": str(e)}, status=400)
+
 
 # -------- Verify email endpoint --------
 # @api_view(["POST"])

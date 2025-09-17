@@ -22,7 +22,7 @@ import resend
 
 # Resend config
 
-FRONTEND_URL = config("FRONTEND_URL", default="http://localhost:5173")
+# FRONTEND_URL = config("FRONTEND_URL", default="http://localhost:5173")
 
 
 

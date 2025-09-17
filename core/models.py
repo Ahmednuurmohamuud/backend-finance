@@ -97,6 +97,8 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
+
+
 # ----- OTP Codes -----
 class OTP(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

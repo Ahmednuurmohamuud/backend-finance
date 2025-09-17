@@ -30,6 +30,7 @@ auth_urls = [
     path("users/google-oauth/", google_oauth),
     path("users/verify-otp/", verify_otp),  # ✅ Add this
     path("users/resend_verification/", resend_verification),  # ✅ Add this
+    # path("users/send_verification_otp/",send_verification_otp),
     path("users/verify_email/", verify_email),  # ✅ Add this
     path("users/resend-otp/", resend_otp),
     path("users/change-password/", change_password),  # ✅ Add this

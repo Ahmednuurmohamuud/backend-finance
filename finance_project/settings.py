@@ -20,7 +20,11 @@ environ.Env.read_env()
 import os
 import resend
 
-resend.api_key = os.environ.get("RESEND_API_KEY")
+# Resend config
+
+FRONTEND_URL = config("FRONTEND_URL", default="http://localhost:5173")
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,11 +82,11 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://finance-frontend-production-a0b9.up.railway.app",
+    # "https://finance-frontend-production-a0b9.up.railway.app",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://finance-frontend-production-a0b9.up.railway.app",
+    # "https://finance-frontend-production-a0b9.up.railway.app",
 ]
 
 
@@ -261,25 +265,15 @@ CELERY_BEAT_SCHEDULE = {
     # },
 }
 
+EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_USE_SSL=False
+EMAIL_HOST_USER="xararavic1547@gmail.com"
+EMAIL_HOST_PASSWORD="wxngjfdvpvzmxtoy"  # App password Gmail
+DEFAULT_FROM_EMAIL="xararavic1547@gmail.com"
 
-# FRONTEND_URL = "http://localhost:5173/"# Ku dar URL-ka frontend-kaaga
-# Email tijaabo (bilaash)
-# EMAIL_BACKEND = config('EMAIL_BACKEND')
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_PORT = config('EMAIL_PORT', cast=int)
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
-# EMAIL_USE_SSL = config('EMAIL_USE_SSL', cast=bool)
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
-
-# EMAIL_BACKEND = env("EMAIL_BACKEND")
-# EMAIL_HOST = env("EMAIL_HOST")
-# EMAIL_PORT = env.int("EMAIL_PORT")
-# EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS")
-# EMAIL_HOST_USER = env("EMAIL_HOST_USER")
-# EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD")
-# DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 
 
 # File storage (S3 optional)

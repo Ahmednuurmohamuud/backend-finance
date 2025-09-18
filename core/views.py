@@ -50,7 +50,7 @@ signer = TimestampSigner()  # token generator for email verification
 EMAIL_TOKEN_MAX_AGE = 60 * 60 * 24  # 24h validity
 
 # FRONTEND_URL = "http://localhost:5173"
-FRONTEND_URL = "https://finance-frontend-production-a0b9.up.railway.app"
+FRONTEND_URL = "https://pr-finance.up.railway.app"
 
 
 

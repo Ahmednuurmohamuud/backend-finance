@@ -4,7 +4,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils import timezone
-FRONTEND_URL = "https://finance-frontend-production-a0b9.up.railway.app"
+FRONTEND_URL = "https://pr-finance.up.railway.app"
 
 
 def send_notification_email(user, subject, message, notification_id=None, email_type="general", extra_data=None):
@@ -14,7 +14,7 @@ def send_notification_email(user, subject, message, notification_id=None, email_
         context = {
             'subject': subject,
             'message': message,
-            'action_url': f"https://finance-frontend-production-a0b9.up.railway.app/notifications/{notification_id}" if notification_id else f"{settings.FRONTEND_URL}/notifications",
+            'action_url': f"https://pr-finance.up.railway.app/notifications/{notification_id}" if notification_id else f"{settings.FRONTEND_URL}/notifications",
             'unsubscribe_url': f"{FRONTEND_URL}/settings/notifications",
             'settings_url': f"{FRONTEND_URL}/settings",
             'support_url': f"{FRONTEND_URL}/support",

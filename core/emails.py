@@ -1,36 +1,30 @@
-from django.core.mail import EmailMultiAlternatives
-import random
-from django.utils import timezone
-from .models import OTP
+import resend
 from django.conf import settings
+from django.core.signing import TimestampSigner
+from django.utils import timezone
+
+signer = TimestampSigner()
+
+
 
 def send_verification_email(user):
-    # Generate 6-digit OTP
-      # Generate 6-digit OTP
-    code = f"{random.randint(100000, 999999)}"
-    OTP.objects.create(user=user, code=code)
-
-    subject = "Your verification code"
-    html_content = f"""
-        <p>Hello {user.username},</p>
-        <p>Your verification code is:</p>
-        <h2>{code}</h2>
-        <p>This code will expire in 30 minutes.</p>
-    """
-    text_content = f"Hello {user.username},\nYour verification code is: {code}\nThis code will expire in 30 minutes."
+    token = signer.sign(user.id)
+    verification_link = f"{settings.FRONTEND_URL}/verify_email?token={token}"
 
     try:
-        email = EmailMultiAlternatives(
-            subject=subject,
-            body=text_content,
-            from_email=settings.DEFAULT_FROM_EMAIL,  # ✅ Halkan waa muhiim
-            to=[user.email],
-        )
-        email.attach_alternative(html_content, "text/html")
-        email.send()
-        print(f"OTP email sent to {user.email}")
-        return True
+        response = resend.Emails.send({
+            "from": "Finance <info@personalfinanace.site>",
+            "to": [user.email],
+            "subject": "Verify your email",
+            "html": f"""
+                <p>Hello {user.username},</p>
+                <p>Click this link to verify your email:</p>
+                <a href="{verification_link}">{verification_link}</a>
+                <p>This link will expire in 24 hours.</p>
+            """,
+        })
+        print("Email sent:", response)
+        return response
     except Exception as e:
-        print(f"Failed to send OTP email via SMTP: {e}")
+        print("Failed to send verification email:", e)
         raise
-

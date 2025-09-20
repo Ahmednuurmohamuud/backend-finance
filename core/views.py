@@ -49,8 +49,8 @@ from django.core.mail import EmailMultiAlternatives
 signer = TimestampSigner()  # token generator for email verification
 EMAIL_TOKEN_MAX_AGE = 60 * 60 * 24  # 24h validity
 
-# FRONTEND_URL = "http://localhost:5173"
-FRONTEND_URL = "https://pr-finance.up.railway.app"
+FRONTEND_URL = "http://localhost:5173"
+# FRONTEND_URL = "https://pr-finance.up.railway.app"
 
 
 
@@ -219,87 +219,87 @@ def resend_otp(request):
 
 
 
-def send_verification_email(user):
-    # Generate 6-digit OTP
-    code = f"{random.randint(100000, 999999)}"
+# def send_verification_email(user):
+#     # Generate 6-digit OTP
+#     code = f"{random.randint(100000, 999999)}"
 
-    # Save OTP in DB
-    OTP.objects.create(user=user, code=code)
+#     # Save OTP in DB
+#     OTP.objects.create(user=user, code=code)
 
-    # Email content
-    subject = "Your verification code"
-    html_content = f"""
-        <p>Hello {user.username},</p>
-        <p>Your verification code is:</p>
-        <h2>{code}</h2>
-        <p>This code will expire in 30 minutes.</p>
-    """
-    text_content = f"Hello {user.username},\nYour verification code is: {code}\nThis code will expire in 30 minutes."
+#     # Email content
+#     subject = "Your verification code"
+#     html_content = f"""
+#         <p>Hello {user.username},</p>
+#         <p>Your verification code is:</p>
+#         <h2>{code}</h2>
+#         <p>This code will expire in 30 minutes.</p>
+#     """
+#     text_content = f"Hello {user.username},\nYour verification code is: {code}\nThis code will expire in 30 minutes."
 
-    try:
-        email = EmailMultiAlternatives(
-            subject=subject,
-            body=text_content,
-            from_email=None,  # uses DEFAULT_FROM_EMAIL from settings
-            to=[user.email],
-        )
-        email.attach_alternative(html_content, "text/html")
-        email.send()
-        print("OTP email sent via Gmail SMTP")
-        return True
-    except Exception as e:
-        print("Failed to send OTP email via SMTP:", e)
-        raise
+#     try:
+#         email = EmailMultiAlternatives(
+#             subject=subject,
+#             body=text_content,
+#             from_email=None,  # uses DEFAULT_FROM_EMAIL from settings
+#             to=[user.email],
+#         )
+#         email.attach_alternative(html_content, "text/html")
+#         email.send()
+#         print("OTP email sent via Gmail SMTP")
+#         return True
+#     except Exception as e:
+#         print("Failed to send OTP email via SMTP:", e)
+#         raise
 
 
-from django.utils import timezone
-from datetime import timedelta
+# from django.utils import timezone
+# from datetime import timedelta
 
-@api_view(["POST"])
-@permission_classes([permissions.AllowAny])
-def resend_verification(request):
-    email = request.data.get("email")
-    if not email:
-        return Response({"detail": "Email is required"}, status=400)
+# @api_view(["POST"])
+# @permission_classes([permissions.AllowAny])
+# def resend_verification(request):
+#     email = request.data.get("email")
+#     if not email:
+#         return Response({"detail": "Email is required"}, status=400)
 
-    try:
-        user = User.objects.get(email=email)
+#     try:
+#         user = User.objects.get(email=email)
 
-        if user.is_verified:
-            return Response({"detail": "User is already verified"}, status=400)
+#         if user.is_verified:
+#             return Response({"detail": "User is already verified"}, status=400)
 
-        now = timezone.now()
+#         now = timezone.now()
 
-        # Haddii user uusan horey u bilaabin 24h window, deji
-        if not user.verification_window_start or now - user.verification_window_start > timedelta(hours=24):
-            user.verification_window_start = now
-            user.verification_count = 0
+#         # Haddii user uusan horey u bilaabin 24h window, deji
+#         if not user.verification_window_start or now - user.verification_window_start > timedelta(hours=24):
+#             user.verification_window_start = now
+#             user.verification_count = 0
 
-        # Check 3 jeer maalintii
-        if user.verification_count >= 3:
-            return Response(
-                {"detail": "Waxaad horey u codsatay OTP 3 jeer 24 saac gudaheed. Fadlan sug ilaa 24 saac ka dib."},
-                status=429
-            )
+#         # Check 3 jeer maalintii
+#         if user.verification_count >= 3:
+#             return Response(
+#                 {"detail": "Waxaad horey u codsatay OTP 3 jeer 24 saac gudaheed. Fadlan sug ilaa 24 saac ka dib."},
+#                 status=429
+#             )
 
-        # Check 30 daqiiqo min ka hor codsiga xiga
-        if user.last_verification_sent and (now - user.last_verification_sent) < timedelta(minutes=30):
-            remaining = 30 - int((now - user.last_verification_sent).total_seconds() / 60)
-            return Response(
-                {"detail": f"Fadlan sug {remaining} daqiiqo ka hor intaadan mar kale codsan."},
-                status=429
-            )
+#         # Check 30 daqiiqo min ka hor codsiga xiga
+#         if user.last_verification_sent and (now - user.last_verification_sent) < timedelta(minutes=30):
+#             remaining = 30 - int((now - user.last_verification_sent).total_seconds() / 60)
+#             return Response(
+#                 {"detail": f"Fadlan sug {remaining} daqiiqo ka hor intaadan mar kale codsan."},
+#                 status=429
+#             )
 
-        # Haddii limit aan la gaarin, dir OTP
-        send_verification_email(user)
-        user.last_verification_sent = now
-        user.verification_count += 1
-        user.save(update_fields=["last_verification_sent", "verification_count", "verification_window_start"])
+#         # Haddii limit aan la gaarin, dir OTP
+#         send_verification_email(user)
+#         user.last_verification_sent = now
+#         user.verification_count += 1
+#         user.save(update_fields=["last_verification_sent", "verification_count", "verification_window_start"])
 
-        return Response({"detail": "OTP verification email sent"})
+#         return Response({"detail": "OTP verification email sent"})
 
-    except User.DoesNotExist:
-        return Response({"detail": "User not found"}, status=404)
+#     except User.DoesNotExist:
+#         return Response({"detail": "User not found"}, status=404)
 
 
 
@@ -311,7 +311,7 @@ def resend_verification(request):
 
 #     try:
 #         response = resend.Emails.send({
-#             "from": "Finance <finance@send.ns1.infinityfree.com>",  # must be domain verified in Resend
+#             "from": "Finance <info@personalfinanace.site>",  # must be domain verified in Resend
 #             "to": [user.email],
 #             "subject": "Verify your email",
 #             "html": f"""
@@ -328,35 +328,35 @@ def resend_verification(request):
 #         raise
 
 # -------- Resend verification endpoint --------
-# @api_view(["POST"])
-# @permission_classes([permissions.AllowAny])
-# def resend_verification(request):
-#     email = request.data.get("email")
-#     if not email:
-#         return Response({"detail": "Email is required"}, status=400)
+@api_view(["POST"])
+@permission_classes([permissions.AllowAny])
+def resend_verification(request):
+    email = request.data.get("email")
+    if not email:
+        return Response({"detail": "Email is required"}, status=400)
 
-#     try:
-#         user = User.objects.get(email=email)
+    try:
+        user = User.objects.get(email=email)
 
-#         if user.is_verified:
-#             return Response({"detail": "User is already verified"}, status=400)
+        if user.is_verified:
+            return Response({"detail": "User is already verified"}, status=400)
 
-#         # Rate limiting: 2 daqiiqo
-#         if hasattr(user, "last_verification_sent") and user.last_verification_sent:
-#             diff = timezone.now() - user.last_verification_sent
-#             if diff.total_seconds() < 120:
-#                 return Response(
-#                     {"detail": "Verification email hore ayaa laguu diray. Fadlan sug 2 daqiiqo ka hor intaadan mar kale codsan."},
-#                     status=429
-#                 )
+        # Rate limiting: 2 daqiiqo
+        if hasattr(user, "last_verification_sent") and user.last_verification_sent:
+            diff = timezone.now() - user.last_verification_sent
+            if diff.total_seconds() < 120:
+                return Response(
+                    {"detail": "Verification email hore ayaa laguu diray. Fadlan sug 2 daqiiqo ka hor intaadan mar kale codsan."},
+                    status=429
+                )
 
-#         send_verification_email(user)
-#         user.last_verification_sent = timezone.now()
-#         user.save(update_fields=["last_verification_sent"])
-#         return Response({"detail": "Verification email sent"})
+        send_verification_email(user)
+        user.last_verification_sent = timezone.now()
+        user.save(update_fields=["last_verification_sent"])
+        return Response({"detail": "Verification email sent"})
 
-#     except User.DoesNotExist:
-#         return Response({"detail": "User not found"}, status=404)
+    except User.DoesNotExist:
+        return Response({"detail": "User not found"}, status=404)
 
 
 
@@ -434,52 +434,62 @@ def google_oauth(request):
 
 
 # -------- Verify email endpoint --------
-# @api_view(["POST"])
-# @permission_classes([permissions.AllowAny])
-# def verify_email(request):
-#     token = request.data.get("token")
-#     if not token:
-#         return Response({"error": "Token is required"}, status=400)
-
-#     try:
-#         user_id = signer.unsign(token, max_age=EMAIL_TOKEN_MAX_AGE)
-#         user = User.objects.get(id=user_id)
-#         user.is_verified = True
-#         user.save(update_fields=["is_verified"])
-#         return Response({"verified": True, "message": "Email verified successfully"})
-#     except SignatureExpired:
-#         return Response({"error": "Token expired"}, status=400)
-#     except (BadSignature, User.DoesNotExist):
-#         return Response({"error": "Invalid token"}, status=400)
-
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def verify_email(request):
-    email = request.data.get("email")
-    code = request.data.get("code")
-
-    if not email or not code:
-        return Response({"detail": "Email and OTP are required"}, status=400)
+    token = request.data.get("token")
+    if not token:
+        return Response({"error": "Token is required"}, status=400)
 
     try:
-        user = User.objects.get(email=email)
-        otp = OTP.objects.filter(user=user, code=code, is_used=False).last()
+        user_id = signer.unsign(token, max_age=settings.EMAIL_TOKEN_MAX_AGE)
+        user = User.objects.get(id=user_id)
 
-        if not otp or not otp.is_valid():
-            return Response({"detail": "Invalid or expired OTP"}, status=400)
+        if user.is_verified:
+            return Response({"verified": True, "message": "Email already verified"})
 
-        # Mark OTP as used
-        otp.is_used = True
-        otp.save(update_fields=["is_used"])
-
-        # Mark user as verified
         user.is_verified = True
         user.save(update_fields=["is_verified"])
+        return Response({"verified": True, "message": "Email verified successfully"})
 
-        return Response({"detail": "Email verified successfully"})
-
+    except SignatureExpired:
+        return Response({
+            "error": "Token expired. Please request a new verification email."
+        }, status=400)
+    except BadSignature:
+        return Response({"error": "Invalid token"}, status=400)
     except User.DoesNotExist:
-        return Response({"detail": "User not found"}, status=404)
+        return Response({"error": "User not found"}, status=404)
+
+
+# @api_view(["POST"])
+# @permission_classes([permissions.AllowAny])
+# def verify_email(request):
+#     email = request.data.get("email")
+#     code = request.data.get("code")
+
+#     if not email or not code:
+#         return Response({"detail": "Email and OTP are required"}, status=400)
+
+#     try:
+#         user = User.objects.get(email=email)
+#         otp = OTP.objects.filter(user=user, code=code, is_used=False).last()
+
+#         if not otp or not otp.is_valid():
+#             return Response({"detail": "Invalid or expired OTP"}, status=400)
+
+#         # Mark OTP as used
+#         otp.is_used = True
+#         otp.save(update_fields=["is_used"])
+
+#         # Mark user as verified
+#         user.is_verified = True
+#         user.save(update_fields=["is_verified"])
+
+#         return Response({"detail": "Email verified successfully"})
+
+#     except User.DoesNotExist:
+#         return Response({"detail": "User not found"}, status=404)
 # -------- Logout endpoint --------
 @api_view(["POST"])
 def logout(request):

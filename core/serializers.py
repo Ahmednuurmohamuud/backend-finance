@@ -6,6 +6,7 @@ from .models import *
 from decimal import Decimal
 from .emails import send_verification_email
 
+
 # ---- User & Auth ----
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
@@ -38,21 +39,27 @@ class RegisterSerializer(serializers.ModelSerializer):
                 )
         return value
 
-    def create(self, validated_data):
-        pwd = validated_data.pop("password")
-        user = User(**validated_data)
-        user.set_password(pwd)
-        user.is_verified = False
-        user.save()
+def create(self, validated_data):
+    pwd = validated_data.pop("password")
+    user = User(**validated_data)
+    user.set_password(pwd)
+    user.is_verified = False
+    user.save()
 
-       
-       
+    # Send verification email
+    try:
+        send_verification_email(user)
+    except Exception as e:
+        print("⚠️ Failed to send verification email:", e)
+        # Do not raise; user account already exists
 
-        # Update last_verification_sent
-        user.last_verification_sent = timezone.now()
-        user.save(update_fields=["last_verification_sent"])
+    # Update last_verification_sent
+    user.last_verification_sent = timezone.now()
+    user.save(update_fields=["last_verification_sent"])
 
-        return user
+    return user
+      
+    
 # class RegisterSerializer(serializers.ModelSerializer):
 #     password = serializers.CharField(write_only=True)
 
@@ -93,7 +100,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 #         user.save()
 
 #         # 🚀 halkan ku dir email verification
-#         # tusaale: send_verification_email(user)
+#         send_verification_email(user)
 #         return user
 
 # ---- User Serializer ----

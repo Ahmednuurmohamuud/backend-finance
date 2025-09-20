@@ -44,6 +44,9 @@ if os.path.exists(env_file):
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env.bool("DEBUG")
 
+DEBUG = True  # kaliya dev/test
+
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'finance-backend.up.railway.app']
 
 # Static files
@@ -78,7 +81,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-
+EMAIL_TOKEN_MAX_AGE = 60 * 60 * 24  # 24h validity
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -265,14 +268,23 @@ CELERY_BEAT_SCHEDULE = {
     # },
 }
 
-EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST="smtp.gmail.com"
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_USE_SSL=False
-EMAIL_HOST_USER="xararavic1547@gmail.com"
-EMAIL_HOST_PASSWORD="wxngjfdvpvzmxtoy"  # App password Gmail
-DEFAULT_FROM_EMAIL="xararavic1547@gmail.com"
+# EMAIL_BACKEND="django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST="smtp.gmail.com"
+# EMAIL_PORT=587
+# EMAIL_USE_TLS=True
+# EMAIL_USE_SSL=False
+# EMAIL_HOST_USER="xararavic1547@gmail.com"
+# EMAIL_HOST_PASSWORD="wxngjfdvpvzmxtoy"  # App password Gmail
+# DEFAULT_FROM_EMAIL="xararavic1547@gmail.com"
+
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+
 
 
 

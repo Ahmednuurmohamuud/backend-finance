@@ -44,7 +44,7 @@ if os.path.exists(env_file):
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env.bool("DEBUG")
 
-DEBUG = True  # kaliya dev/test
+# DEBUG = True  # kaliya dev/test
 
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'finance-backend.up.railway.app']

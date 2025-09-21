@@ -22,7 +22,7 @@ def send_verification_email(user):
                     
                     <!-- Header / Logo -->
                     <div style="background-color: #4f46e5; padding: 20px; text-align: center;">
-                        <img src="https://pr-finance.up.railway.app/static/logo.png" alt="Finance Logo" style="width: 120px; height: auto;">
+                        <img src="https://pr-finance.up.railway.app/logo.png" alt="Finance Logo" style="width: 120px; height: auto;">
                     </div>
                     
                     <!-- Body -->

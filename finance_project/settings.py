@@ -20,9 +20,12 @@ environ.Env.read_env()
 import os
 import resend
 
-# Resend config
+# Load API key
+resend.api_key = os.getenv("RESEND_API_KEY")
 
-# FRONTEND_URL = config("FRONTEND_URL", default="http://localhost:5173")
+# From email
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+FRONTEND_URL = os.getenv("FRONTEND_URL")
 
 
 
@@ -46,7 +49,7 @@ DEBUG = env.bool("DEBUG")
 
 # DEBUG = True  # kaliya dev/test
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+# FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'finance-backend.up.railway.app']
 
 # Static files
@@ -277,13 +280,13 @@ CELERY_BEAT_SCHEDULE = {
 # EMAIL_HOST_PASSWORD="wxngjfdvpvzmxtoy"  # App password Gmail
 # DEFAULT_FROM_EMAIL="xararavic1547@gmail.com"
 
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
-DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
+# EMAIL_BACKEND = os.getenv("EMAIL_BACKEND")
+# EMAIL_HOST = os.getenv("EMAIL_HOST")
+# EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+# EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
+# EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+# DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL")
 
 
 

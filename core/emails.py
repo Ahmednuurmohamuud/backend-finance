@@ -9,7 +9,7 @@ signer = TimestampSigner()
 
 def send_verification_email(user):
     token = signer.sign(user.id)
-    verification_link = f"{settings.FRONTEND_URL}/verify_email?token={token}"
+    verification_link = f"{settings.FRONTEND_URL}/verify-email?token={token}"
 
     try:
         response = resend.Emails.send({
